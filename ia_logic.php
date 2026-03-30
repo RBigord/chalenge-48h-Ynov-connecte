@@ -1,16 +1,25 @@
 <?php
 
-require_once 'vendor/autoload.php';
+$maCle = null;
+$cheminEnv = __DIR__ . '/.env';
 
-try {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-} catch (Exception $e) {
-    die("Erreur lors du chargement du fichier .env : " . $e->getMessage());
+if (file_exists($cheminEnv)) {
+    $lignes = file($cheminEnv, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lignes as $ligne) {
+        
+        if (strpos(trim($ligne), '#') === 0) continue;
+        
+        
+        if (strpos($ligne, '=') !== false) {
+            list($nom, $valeur) = explode('=', $ligne, 2);
+            if (trim($nom) === 'Ynov_Challenge_Key') {
+                $maCle = trim($valeur);
+            }
+        }
+    }
 }
 
-// Cette classe gère toute la partie Intelligence Artificielle du projet.
-
+// CLASSE D'INTERACTION AVEC L'API
 class InnovationIA {
     private $apiKey;
     private $baseUrl = "https://api.openai.com/v1/chat/completions";
@@ -19,7 +28,7 @@ class InnovationIA {
         $this->apiKey = $key;
     }
 
-    // FONCTIONNALITÉ 1 : Résumer les News Ynov 
+    // FONCTIONNALITÉ 1 : Résumer les News Ynov
     public function resumerNews($texteLong) {
         $prompt = "Tu es l'assistant du campus Ynov. Résume cette actualité en 2 phrases simples et accrocheuses pour les étudiants.";
         return $this->appelAPI($prompt, $texteLong);
@@ -34,7 +43,7 @@ class InnovationIA {
     // LE MOTEUR D'APPEL À L'API 
     private function appelAPI($systemPrompt, $userContent) {
         if (empty($this->apiKey)) {
-            return "Erreur : Clé API manquante dans le fichier .env";
+            return "Erreur : La clé API n'a pas été trouvée dans le fichier .env";
         }
 
         $ch = curl_init($this->baseUrl);
@@ -63,15 +72,11 @@ class InnovationIA {
 
         $decoded = json_decode($response, true);
         
-        // On retourne la réponse de l'IA ou un message d'erreur propre
+        // Retourne la réponse ou un message d'erreur si l'API OpenAI sature
         return $decoded['choices'][0]['message']['content'] ?? "L'IA est indisponible pour le moment.";
     }
 }
 
-// TEST 
-// Récupération de la clé depuis le .env
-$maCle = $_ENV['Ynov_Challenge_Key'] ?? null;
 
-// Initialisation de l'IA
 $monIA = new InnovationIA($maCle);
 
