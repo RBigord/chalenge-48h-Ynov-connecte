@@ -1,7 +1,7 @@
 <?php
 
 $maCle = null;
-$cheminEnv = __DIR__ . '/.env';
+$cheminEnv = __DIR__ . '/../.env';
 
 if (file_exists($cheminEnv)) {
     $lignes = file($cheminEnv, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -77,6 +77,4 @@ class InnovationIA {
     }
 }
 
-
-$monIA = new InnovationIA($maCle);
 
