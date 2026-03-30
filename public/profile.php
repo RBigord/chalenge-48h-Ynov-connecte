@@ -63,6 +63,7 @@ try {
             <button type="submit">Se deconnecter</button>
         </form>
 
+        <p><a href="ymatch.php">Acceder a Ymatch</a></p>
         <p><a href="index.php">Retour</a></p>
     </main>
 </body>

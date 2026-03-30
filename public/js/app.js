@@ -64,12 +64,8 @@ class CampusConnectApp {
     }
 
     initAuth() {
-        const btnAuthLogin = document.getElementById('btn-auth-login');
-        const btnAuthSignup = document.getElementById('btn-auth-signup');
         const logoutLink = document.querySelector('.logout');
 
-        if (btnAuthLogin) btnAuthLogin.addEventListener('click', () => this.uiManager.showApp());
-        if (btnAuthSignup) btnAuthSignup.addEventListener('click', () => this.uiManager.showApp());
         if (logoutLink) logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
             this.uiManager.showAuth();

@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$isError = !$result['success'];
 
 			if ($result['success']) {
-				header('Location: login.php');
+				header('Location: index.php');
 				exit;
 			}
 		} catch (Throwable $e) {
@@ -78,7 +78,7 @@ $token = Auth::csrfToken();
 			<button type="submit">S'inscrire</button>
 		</form>
 
-		<p><a href="login.php">Deja un compte ? Connexion</a></p>
+		<p><a href="index.php">Deja un compte ? Connexion</a></p>
 	</main>
 </body>
 </html>
