@@ -33,15 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logou
 <body>
     <main>
         <h1>Ymatch Job Board</h1>
-        <?php if ($errorMessage !== ''): ?>
-            <p style="color: #b91c1c;"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8'); ?></p>
-        <?php endif; ?>
+        <p>
+            Ymatch est la plateforme de mise en relation de l'ecole Ynov entre etudiants et entreprises.
+            Elle permet de trouver des offres de stage, d'alternance et d'emploi adaptees aux profils des apprenants.
+        </p>
 
-        <form method="post" action="">
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
-            <input type="hidden" name="action" value="logout">
-            <button type="submit">Se deconnecter</button>
-        </form>
+        <p>
+            Acceder a Ymatch:
+            <a href="https://www.ymatch.com" target="_blank" rel="noopener noreferrer">www.ymatch.com</a>
+        </p>
 
         <p><a href="profile.php">Retour au profil</a></p>
     </main>
