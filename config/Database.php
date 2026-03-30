@@ -6,6 +6,7 @@ class Database
     private string $dbName;
     private string $user;
     private string $password;
+    private static ?PDO $instance = null;
 
     public function __construct()
     {
@@ -29,5 +30,16 @@ class Database
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]
         );
+    }
+
+    // Compatibility helper for code that expects singleton access.
+    public static function getInstance(): PDO
+    {
+        if (self::$instance === null) {
+            $database = new self();
+            self::$instance = $database->connect();
+        }
+
+        return self::$instance;
     }
 }
