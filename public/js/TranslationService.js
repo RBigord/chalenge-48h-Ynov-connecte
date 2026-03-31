@@ -6,7 +6,8 @@ import { translations } from './data.js';
 export class TranslationService {
     constructor(initialLang = 'fr') {
         this.translations = translations;
-        this.currentLang = initialLang;
+        // On récupère la langue depuis le localStorage, ou on utilise la langue par défaut
+        this.currentLang = localStorage.getItem('campus-connect-lang') || initialLang;
     }
 
     setLanguage(lang) {
@@ -15,6 +16,8 @@ export class TranslationService {
             return;
         }
         this.currentLang = lang;
+        // On sauvegarde la langue choisie dans le localStorage pour la persistance
+        localStorage.setItem('campus-connect-lang', lang);
         this.translatePage();
     }
 

@@ -37,28 +37,26 @@ class CampusConnectApp {
     }
 
     initNavigation() {
+        // Avec une approche multi-pages, la navigation principale est gérée par les href.
+        // Le JS sert maintenant à mettre en évidence le lien actif.
+        const currentPage = window.location.pathname.split('/').pop();
         this.uiManager.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = e.currentTarget.getAttribute('data-target');
-                const linkId = e.currentTarget.id;
-                
-                this.uiManager.activateNavLink(linkId);
-                this.uiManager.showView(targetId);
-
-                // Si on clique sur le lien du profil, on affiche le profil de l'utilisateur connecté
-                if (targetId === 'view-profile') {
-                    this.renderProfile(mockUsers['Leila Martinez'].name, true);
-                }
-            });
+            const linkPage = link.getAttribute('href');
+            // Gère le cas où on est à la racine (index.html)
+            if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
         });
 
-        const profileIcon = document.querySelector('.profile-icon');
-        if (profileIcon) {
-            profileIcon.addEventListener('click', () => {
-                document.getElementById('link-profile')?.click();
+        // La logique pour le clic sur l'icône de profil doit maintenant rediriger.
+        const profileIcons = document.querySelectorAll('.profile-icon');
+        profileIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                window.location.href = 'profile.html';
             });
-        }
+        });
     }
 
     initAuth() {
@@ -90,9 +88,7 @@ class CampusConnectApp {
             if (authorInfo) {
                 const authorName = authorInfo.dataset.authorName;
                 if (authorName) {
-                    this.renderProfile(authorName, false);
-                    this.uiManager.showView('view-profile');
-                    this.uiManager.activateNavLink('link-profile');
+                    window.location.href = `profile.html?user=${encodeURIComponent(authorName)}`;
                 }
             }
         });
@@ -122,6 +118,12 @@ class CampusConnectApp {
                     if (list) this.addNewSkillRow(list);
                 }
             });
+
+            // Gérer le chargement dynamique du profil
+            const urlParams = new URLSearchParams(window.location.search);
+            const userName = urlParams.get('user') || 'Leila Martinez';
+            const isCurrentUser = userName === 'Leila Martinez';
+            this.renderProfile(userName, isCurrentUser);
         }
         this.initProfileTabs();
     }
@@ -262,6 +264,9 @@ class CampusConnectApp {
         const chatHistory = document.getElementById('chat-history');
         const chatHeader = document.getElementById('chat-header');
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const contactName = urlParams.get('contact');
+
         if (contactsContainer) {
             mockContacts.forEach(contact => {
                 const li = document.createElement('li');
@@ -275,10 +280,31 @@ class CampusConnectApp {
                 `;
                 contactsContainer.appendChild(li);
             });
+            
+            // Si on a un nouveau contact de l'URL qui n'est pas dans la liste
+            if (contactName && !mockContacts.some(c => c.name === contactName)) {
+                const li = document.createElement('li');
+                li.className = 'contact-item';
+                li.innerHTML = `
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(contactName)}&background=2563eb&color=fff" alt="${contactName}" class="avatar-small">
+                    <div class="contact-info">
+                        <h4>${contactName}</h4>
+                        <p>Nouvelle discussion</p>
+                    </div>
+                `;
+                contactsContainer.prepend(li);
+            }
         }
 
-        if (chatHistory) {
-            chatHeader.innerHTML = `<h3><img src="${mockContacts[0].avatar}" class="avatar-small" style="vertical-align: middle; margin-right: 10px;"> ${mockContacts[0].name}</h3>`;
+        if (chatHistory && chatHeader) {
+            let activeContact = mockContacts[0];
+            if (contactName) {
+                const found = mockContacts.find(c => c.name === contactName);
+                if (found) activeContact = found;
+                else activeContact = { name: contactName, avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(contactName)}&background=2563eb&color=fff` };
+            }
+
+            chatHeader.innerHTML = `<h3><img src="${activeContact.avatar}" class="avatar-small" style="vertical-align: middle; margin-right: 10px;"> ${activeContact.name}</h3>`;
             chatHistory.innerHTML = `
                 <div class="chat-bubble receiver">Salut ! Tu es prêt pour le challenge 48h ?</div>
                 <div class="chat-bubble sender">Oui ! J'ai hâte de commencer à coder. 🚀</div>
@@ -465,21 +491,24 @@ class CampusConnectApp {
 
         const btnMessageProfile = document.getElementById('btn-message-profile');
         if (btnMessageProfile) {
-            btnMessageProfile.addEventListener('click', () => this.goToMessagesView('Leila Martinez'));
+            btnMessageProfile.addEventListener('click', () => {
+                const profileName = document.getElementById('profile-name')?.textContent || 'Contact';
+                this.goToMessagesView(profileName);
+            });
         }
 
         const btnSendMessageSide = document.getElementById('btn-send-message-side');
         if (btnSendMessageSide) {
-            btnSendMessageSide.addEventListener('click', () => this.goToMessagesView('Leila Martinez'));
+            btnSendMessageSide.addEventListener('click', () => {
+                const profileName = document.getElementById('profile-name')?.textContent || 'Contact';
+                this.goToMessagesView(profileName);
+            });
         }
 
         const btnAddFriend = document.getElementById('btn-add-friend');
         if (btnAddFriend) {
             btnAddFriend.addEventListener('click', () => {
-                const friendsLink = document.getElementById('link-friends');
-                if (friendsLink) {
-                    friendsLink.click();
-                }
+                window.location.href = 'friends.html';
             });
         }
 
@@ -518,32 +547,15 @@ class CampusConnectApp {
         const btnNewDiscussion = document.getElementById('btn-new-discussion');
         if (btnNewDiscussion) {
             btnNewDiscussion.addEventListener('click', () => {
-                const contactsList = document.getElementById('contacts-list');
                 const name = prompt('Nom du contact pour la nouvelle discussion:');
-                if (!name || !contactsList) return;
-                const li = document.createElement('li');
-                li.className = 'contact-item';
-                li.innerHTML = `
-                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff" alt="${name}" class="avatar-small">
-                    <div class="contact-info">
-                        <h4>${name}</h4>
-                        <p>Nouvelle discussion</p>
-                    </div>
-                `;
-                contactsList.prepend(li);
+                if (!name) return;
                 this.goToMessagesView(name);
             });
         }
     }
 
     goToMessagesView(contactName) {
-        this.uiManager.showApp();
-        const msgLink = document.getElementById('link-messages');
-        if (msgLink) msgLink.click();
-        const chatHeader = document.getElementById('chat-header');
-        if (chatHeader) {
-            chatHeader.innerHTML = `<h3>${contactName}</h3>`;
-        }
+        window.location.href = `messages.html?contact=${encodeURIComponent(contactName)}`;
     }
 
     sendMessageFromInput() {
@@ -562,20 +574,27 @@ class CampusConnectApp {
     initLangSwitcher() {
         const btns = document.querySelectorAll('#btn-lang-switcher, #btn-lang-switcher-auth');
         if (!btns.length) return;
-
+    
+        const updateButtonText = (lang) => {
+            const btnText = lang.toUpperCase();
+            btns.forEach(b => {
+                if (b) b.textContent = btnText; // On met à jour seulement le texte, sans icône
+            });
+        };
+    
+        // Mettre à jour le texte du bouton au chargement de la page
+        updateButtonText(this.translationService.currentLang);
+    
+        // Ajouter l'écouteur d'événement pour le clic
         btns.forEach(btn => {
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    const newLang = this.translationService.currentLang === 'fr' ? 'en' : 'fr';
-                    this.translationService.setLanguage(newLang);
-                    const btnText = newLang.toUpperCase();
-                    btns.forEach(b => {
-                        if(b) b.innerHTML = `<i class="fa-solid fa-language"></i> ${btnText}`;
-                    });
-                });
-            }
+            btn.addEventListener('click', () => {
+                const newLang = this.translationService.currentLang === 'fr' ? 'en' : 'fr';
+                this.translationService.setLanguage(newLang); // Le service sauvegarde la langue et traduit
+                updateButtonText(newLang); // On met à jour le texte du bouton
+            });
         });
-        // Appliquer la langue initiale au chargement
+    
+        // Traduire la page au chargement initial avec la langue récupérée
         this.translationService.translatePage();
     }
 
