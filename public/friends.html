@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Amis</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <section id="view-app">
+    <header class="main-header">
+        <div class="header-left">
+            <h1 class="logo"><i class="fa-solid fa-graduation-cap"></i> CampusConnect</h1>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Rechercher des étudiants, posts...">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn-bot" id="btn-lang-switcher" title="Changer de langue">FR</button>
+            <button class="btn-new-post" id="btn-newpost" title="New Post">
+                <i class="fa-solid fa-circle-plus"></i> New Post
+            </button>
+            <div class="profile-icon">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profil">
+            </div>
+        </div>
+    </header>
+
+    <div class="layout-grid container">
+        <aside class="sidebar-left">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" id="link-home" class="nav-link"><i class="fa-solid fa-house"></i> <span data-translate-key="nav_home">Home</span></a></li>
+                    <li><a href="messages.html" id="link-messages" class="nav-link"><i class="fa-solid fa-envelope"></i> <span data-translate-key="nav_messages">Messages</span></a></li>
+                    <li><a href="profile.html" id="link-profile" class="nav-link"><i class="fa-solid fa-user"></i> <span data-translate-key="nav_profile">Profile</span></a></li>
+                    <li><a href="friends.html" id="link-friends" class="nav-link"><i class="fa-solid fa-user-group"></i> <span data-translate-key="nav_friends">Amis</span></a></li>
+                    <li><a href="ymatch.html" id="link-ymatch" class="nav-link"><i class="fa-solid fa-briefcase"></i> <span data-translate-key="nav_ymatch">Ymatch</span></a></li>
+                    <li><a href="settings.html" id="link-settings" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-translate-key="nav_settings">Réglages</span></a></li>
+                    <li><a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> <span data-translate-key="nav_logout">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="feed-center">
+<!-- SECTION AMIS -->
+<section id="view-friends">
+    <div class="card">
+        <h2 data-translate-key="friends_manage">Gérer les amis</h2>
+        <p class="muted small">Ajoutez de nouvelles connexions ou retrouvez vos amis.</p>
+        
+        <div class="add-friend-form">
+            <input type="text" id="invite-friend-input" placeholder="Entrez l'email ou le nom d'utilisateur...">
+            <button class="btn-primary" id="btn-invite-friend">Inviter</button>
+        </div>
+
+        <h3>Mes Amis (<span id="friends-count">0</span>)</h3>
+        <ul class="friends-list" id="friends-list-container">
+            <!-- Amis injectés par JS -->
+        </ul>
+    </div>
+</section>
+        </main>
+        <aside class="sidebar-right"></aside>
+    </div>
+
+    <div id="composer-overlay" class="composer-overlay" aria-hidden="true" style="display:none;"></div>
+    <div id="chatbot-widget" class="chatbot-widget" style="display:none;"></div>
+
+    </section>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

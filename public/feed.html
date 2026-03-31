@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Feed</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <section id="view-app">
+    <header class="main-header">
+        <div class="header-left">
+            <h1 class="logo"><i class="fa-solid fa-graduation-cap"></i> CampusConnect</h1>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Rechercher des étudiants, posts...">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn-bot" id="btn-lang-switcher" title="Changer de langue">FR</button>
+            <button class="btn-new-post" id="btn-newpost" title="New Post">
+                <i class="fa-solid fa-circle-plus"></i> New Post
+            </button>
+            <div class="profile-icon">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profil">
+            </div>
+        </div>
+    </header>
+
+    <div class="layout-grid container">
+        <aside class="sidebar-left">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" id="link-home" class="nav-link active"><i class="fa-solid fa-house"></i> <span data-translate-key="nav_home">Home</span></a></li>
+                    <li><a href="messages.html" id="link-messages" class="nav-link"><i class="fa-solid fa-envelope"></i> <span data-translate-key="nav_messages">Messages</span></a></li>
+                    <li><a href="profile.html" id="link-profile" class="nav-link"><i class="fa-solid fa-user"></i> <span data-translate-key="nav_profile">Profile</span></a></li>
+                    <li><a href="friends.html" id="link-friends" class="nav-link"><i class="fa-solid fa-user-group"></i> <span data-translate-key="nav_friends">Amis</span></a></li>
+                    <li><a href="ymatch.html" id="link-ymatch" class="nav-link"><i class="fa-solid fa-briefcase"></i> <span data-translate-key="nav_ymatch">Ymatch</span></a></li>
+                    <li><a href="settings.html" id="link-settings" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-translate-key="nav_settings">Réglages</span></a></li>
+                    <li><a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> <span data-translate-key="nav_logout">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="feed-center">
+            <section id="view-feed">
+                <div class="create-post card">
+                    <div class="create-post-header">
+                        <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profil" class="avatar-small">
+                        <textarea placeholder="Quoi de neuf sur le campus ?" rows="2"></textarea>
+                    </div>
+                    <div class="create-post-actions">
+                        <button class="btn-icon btn-open-composer" type="button"><i class="fa-solid fa-image"></i> Photo</button>
+                        <button class="btn-icon btn-open-composer" type="button"><i class="fa-solid fa-video"></i> Vidéo</button>
+                        <button class="btn-icon" id="btn-tag-post"><i class="fa-solid fa-tags"></i> Tag</button>
+                        <button class="btn-icon btn-open-composer" type="button"><i class="fa-solid fa-users"></i> Audience</button>
+                        <button class="btn-primary btn-open-composer" type="button">Post</button>
+                    </div>
+                </div>
+
+                <div id="posts-container">
+                    <!-- Les posts seront injectés ici par le JS (POO) -->
+                </div>
+            </section>
+        </main>
+
+        <aside class="sidebar-right">
+            <section id="right-feed">
+                <div class="events-widget card">
+                    <h2>Campus News &amp; Events</h2>
+                    <ul class="events-list">
+                        <li class="event-item">
+                            <div class="event-date"><span class="day">Today</span></div>
+                            <div class="event-details">
+                                <h3>48h Challenge</h3>
+                                <p>Campus Ynov</p>
+                            </div>
+                        </li>
+                        <li class="event-item">
+                            <div class="event-date"><span class="day">Mar</span></div>
+                            <div class="event-details">
+                                <h3>BDE Gala</h3>
+                                <p>Salle des fêtes</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <div id="composer-overlay" class="composer-overlay" aria-hidden="true" style="display:none;"></div>
+    <div id="chatbot-widget" class="chatbot-widget" style="display:none;"></div>
+
+    </section>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

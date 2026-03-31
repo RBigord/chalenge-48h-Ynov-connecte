@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Profil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <section id="view-app">
+    <header class="main-header">
+        <div class="header-left">
+            <h1 class="logo"><i class="fa-solid fa-graduation-cap"></i> CampusConnect</h1>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Rechercher des étudiants, posts...">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn-bot" id="btn-lang-switcher" title="Changer de langue">FR</button>
+            <button class="btn-new-post" id="btn-newpost" title="New Post">
+                <i class="fa-solid fa-circle-plus"></i> New Post
+            </button>
+            <div class="profile-icon">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profil">
+            </div>
+        </div>
+    </header>
+
+    <div class="layout-grid container">
+        <aside class="sidebar-left">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" id="link-home" class="nav-link"><i class="fa-solid fa-house"></i> <span data-translate-key="nav_home">Home</span></a></li>
+                    <li><a href="messages.html" id="link-messages" class="nav-link"><i class="fa-solid fa-envelope"></i> <span data-translate-key="nav_messages">Messages</span></a></li>
+                    <li><a href="profile.html" id="link-profile" class="nav-link"><i class="fa-solid fa-user"></i> <span data-translate-key="nav_profile">Profile</span></a></li>
+                    <li><a href="friends.html" id="link-friends" class="nav-link"><i class="fa-solid fa-user-group"></i> <span data-translate-key="nav_friends">Amis</span></a></li>
+                    <li><a href="ymatch.html" id="link-ymatch" class="nav-link"><i class="fa-solid fa-briefcase"></i> <span data-translate-key="nav_ymatch">Ymatch</span></a></li>
+                    <li><a href="settings.html" id="link-settings" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-translate-key="nav_settings">Réglages</span></a></li>
+                    <li><a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> <span data-translate-key="nav_logout">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="feed-center">
+<!-- SECTION PROFIL -->
+<section id="view-profile">
+    <div class="profile-page">
+        <div class="profile-cover">
+            <div class="profile-cover-image" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80');"></div>
+        </div>
+
+        <div class="profile-header-card card">
+            <div class="profile-header-top">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profile" class="profile-avatar-large" id="profile-picture">
+
+                <div class="profile-identity">
+                    <h2 id="profile-name">Leila Martinez</h2>
+                    <p class="profile-bio" id="profile-bio">B.S. Computer Science, Class of 2025 · Software Engineering Major</p>
+
+                    <div class="profile-contact">
+                        <div class="contact-item-row">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span class="muted small" id="profile-email">leila.martinez@campus.univ.edu</span>
+                        </div>
+                        <div class="contact-item-row">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span class="muted small" id="profile-location">Oakwood Campus · San Mateo, CA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn-outline-sm" type="button" id="btn-follow-profile" style="display: none;">Follow</button>
+                    <button class="btn-outline-sm" type="button" id="btn-message-profile" style="display: none;">Message</button>
+                    <button class="btn-primary btn-edit-sm" type="button" id="btn-edit-profile" style="display: none;"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="profile-stats-grid">
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-posts">128</span>
+                    <span class="stat-label" data-translate-key="profile_competences">Competences</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-followers">3,842</span>
+                    <span class="stat-label" data-translate-key="profile_followers">Followers</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-following">412</span>
+                    <span class="stat-label" data-translate-key="profile_following">Following</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-groups">9</span>
+                    <span class="stat-label" data-translate-key="profile_groups">Groups</span>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-profile-tab="competences" type="button" data-translate-key="profile_tab_competences">Competences</button>
+                <button class="profile-tab" data-profile-tab="about" type="button" data-translate-key="profile_tab_about">About</button>
+                <button class="profile-tab" data-profile-tab="activities" type="button" data-translate-key="profile_tab_activities">Activities</button>
+                <button class="profile-tab" data-profile-tab="photos" type="button" data-translate-key="profile_tab_photos">Photos &amp; Media</button>
+            </div>
+        </div>
+
+        <div class="profile-feed" id="profile-posts-container">
+            <!-- Posts injectés par le JS -->
+        </div>
+    </div>
+</section>
+        </main>
+        
+        <aside class="sidebar-right">
+            <section id="right-profile">
+                <div class="card profile-sidecard">
+                    <h2>Mutual Connections</h2>
+                    <div class="mutual-row">
+                        <div class="mutual-item">
+                            <img class="avatar-small" src="https://ui-avatars.com/api/?name=Marcus+Green&background=1e293b&color=fff" alt="Marcus Green">
+                            <div>
+                                <div class="mutual-name">Marcus Green</div>
+                                <div class="mutual-meta muted small">Mutual</div>
+                            </div>
+                        </div>
+                        <div class="mutual-item">
+                            <img class="avatar-small" src="https://ui-avatars.com/api/?name=Aisha+Khan&background=1e293b&color=fff" alt="Aisha Khan">
+                            <div>
+                                <div class="mutual-name">Aisha Khan</div>
+                                <div class="mutual-meta muted small">Mutual</div>
+                            </div>
+                        </div>
+                        <div class="mutual-item">
+                            <img class="avatar-small" src="https://ui-avatars.com/api/?name=Daniel+Park&background=1e293b&color=fff" alt="Daniel Park">
+                            <div>
+                                <div class="mutual-name">Daniel Park</div>
+                                <div class="mutual-meta muted small">Mutual</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card profile-sidecard">
+                    <h2>Common Courses</h2>
+                    <div class="pill-list">
+                        <span class="pill-pill">CS 321 · Web Systems</span>
+                        <span class="pill-pill">HCI 410 · User Interfaces</span>
+                        <span class="pill-pill">MATH 207 · Discrete Math</span>
+                    </div>
+                </div>
+
+                <div class="card profile-sidecard">
+                    <h2>Quick Actions</h2>
+                    <button class="btn-secondary-full" type="button" id="btn-send-message-side"><i class="fa-regular fa-paper-plane"></i> Send Message</button>
+                    <button class="btn-secondary-full" type="button" id="btn-add-friend"><i class="fa-solid fa-user-plus"></i> Add Friend</button>
+                    <button class="btn-danger-full" type="button" id="btn-report-user"><i class="fa-solid fa-flag"></i> Report</button>
+                </div>
+
+                <div class="card profile-sidecard">
+                    <h2>Visitor Privacy</h2>
+                    <div class="side-toggle">
+                        <div>
+                            <div class="toggle-title">Allow messages</div>
+                            <div class="toggle-sub muted small">Changes apply to non-connection visitors.</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="side-toggle">
+                        <div class="toggle-title">Show courses</div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="side-toggle">
+                        <div class="toggle-title">Show photos</div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card profile-sidecard">
+                    <h2>Privacy Tips</h2>
+                    <div class="muted small">
+                        Set visibility to Campus-only to limit access. Connect campus directories to enable verification badges.
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <div id="composer-overlay" class="composer-overlay" aria-hidden="true" style="display:none;"></div>
+    <div id="chatbot-widget" class="chatbot-widget" style="display:none;"></div>
+
+    </section>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
