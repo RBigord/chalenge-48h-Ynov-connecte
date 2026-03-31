@@ -1,0 +1,28 @@
+<!-- SECTION MESSAGERIE -->
+<section id="view-messages" style="display:none;">
+    <div class="messages-container card">
+        <div class="messages-sidebar">
+            <div class="messages-actions">
+                <button class="btn-primary new-discussion-btn" id="btn-new-discussion" type="button"><i class="fa-solid fa-pen-to-square"></i> New discussion</button>
+            </div>
+            <div class="messages-search">
+                <input type="text" placeholder="Rechercher...">
+            </div>
+            <ul class="contacts-list" id="contacts-list">
+                <!-- Contacts injectés par le JS -->
+            </ul>
+        </div>
+        <div class="messages-chat">
+            <div class="chat-header" id="chat-header">
+                Sélectionnez une conversation
+            </div>
+            <div class="chat-history" id="chat-history">
+                <!-- Messages injectés par le JS -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" placeholder="Écrire un message..." id="chat-input">
+                <button class="btn-primary" id="btn-send-message"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+</section>

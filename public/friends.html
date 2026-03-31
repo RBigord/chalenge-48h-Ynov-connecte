@@ -1,0 +1,17 @@
+<!-- SECTION AMIS -->
+<section id="view-friends" style="display:none;">
+    <div class="card">
+        <h2 data-translate-key="friends_manage">Gérer les amis</h2>
+        <p class="muted small">Ajoutez de nouvelles connexions ou retrouvez vos amis.</p>
+        
+        <div class="add-friend-form">
+            <input type="text" id="invite-friend-input" placeholder="Entrez l'email ou le nom d'utilisateur...">
+            <button class="btn-primary" id="btn-invite-friend">Inviter</button>
+        </div>
+
+        <h3>Mes Amis (<span id="friends-count">0</span>)</h3>
+        <ul class="friends-list" id="friends-list-container">
+            <!-- Amis injectés par JS -->
+        </ul>
+    </div>
+</section>
