@@ -55,30 +55,126 @@ $token = Auth::csrfToken();
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<main>
-		<h1>Inscription</h1>
-		<?php if ($message !== ''): ?>
-			<p style="color: <?php echo $isError ? '#b91c1c' : '#166534'; ?>;">
-				<?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
-			</p>
-		<?php endif; ?>
+	<section id="view-auth" class="view-auth" style="display:flex;">
+		<div class="auth-shell">
+			<div class="auth-left">
+				<div class="auth-brand">
+					<div class="auth-brand-icon"><i class="fa-solid fa-lock"></i></div>
+					<div>
+						<div class="auth-brand-title">CampusConnect</div>
+						<div class="auth-brand-sub">Secure campus community access</div>
+					</div>
+				</div>
 
-		<form method="post" action="">
-			<input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>">
+				<h2 data-translate-key="auth_welcome_title">Welcome to your campus hub</h2>
+				<p class="auth-lead" data-translate-key="auth_welcome_subtitle">
+					Sign in or create an account to join your university network: events, groups, and verified campus resources - all protected with enterprise-grade security.
+				</p>
 
-			<label for="email">Email</label>
-			<input id="email" type="email" name="email" required autocomplete="email">
+				<div class="auth-image-grid">
+					<div class="auth-image-tile">
+						<img alt="Campus" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=900&amp;q=80" />
+					</div>
+					<div class="auth-image-tile">
+						<img alt="Student" src="https://picsum.photos/seed/campus-student/900/500" />
+					</div>
+				</div>
 
-			<label for="password">Mot de passe</label>
-			<input id="password" type="password" name="password" required autocomplete="new-password">
+				<div class="auth-protected">
+					<i class="fa-solid fa-shield-halved"></i>
+					<div>
+						<div class="auth-protected-title">Protected &amp; Verified</div>
+						<div class="auth-protected-sub">
+							All accounts require campus-issued email and optional ID verification for groups and events.
+						</div>
+					</div>
+				</div>
 
-			<label for="password_confirm">Confirmer le mot de passe</label>
-			<input id="password_confirm" type="password" name="password_confirm" required autocomplete="new-password">
+				<div class="auth-support muted">
+					Need help? Contact IT Support: it-support@university.edu - (555) 210-1010
+				</div>
+			</div>
 
-			<button type="submit">S'inscrire</button>
-		</form>
+			<div class="auth-right">
+				<div class="auth-card">
+					<button class="btn-lang-auth" id="btn-lang-switcher-auth" title="Changer de langue">
+						<i class="fa-solid fa-language"></i> FR
+					</button>
+					<div class="auth-card-head">
+						<div>
+							<div class="auth-card-title" data-translate-key="auth_card_title">Welcome back</div>
+							<div class="auth-card-sub" data-translate-key="auth_card_subtitle">Sign in or create an account to continue to CampusConnect</div>
+						</div>
+						<div class="auth-secure">
+							<span class="secure-pill">TLS Encrypted</span>
+						</div>
+					</div>
 
-		<p><a href="index.php">Deja un compte ? Connexion</a></p>
-	</main>
+					<?php if ($message !== ''): ?>
+						<p style="color: <?php echo $isError ? '#b91c1c' : '#166534'; ?>; margin: 10px 0;">
+							<?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>
+						</p>
+					<?php endif; ?>
+
+					<div class="auth-tabs">
+						<button class="auth-tab active" type="button" data-auth-form="login" data-translate-key="auth_tab_login">Login</button>
+						<button class="auth-tab" type="button" data-auth-form="signup" data-translate-key="auth_tab_signup">Sign-up</button>
+					</div>
+					
+					<form id="form-signup" class="auth-form" data-auth-form="signup" style="display:none;" method="post" action="register.php">
+						<input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>">
+						<div class="auth-form-grid">
+							<div>
+								<label class="auth-label" for="signup_fullname">Full name</label>
+								<input class="auth-input" id="signup_fullname" type="text" name="full_name" placeholder="Your full name" />
+							</div>
+							<div>
+								<label class="auth-label" for="signup_email">Campus email</label>
+								<input class="auth-input" id="signup_email" type="email" name="email" placeholder="you@campus.edu" required autocomplete="email" />
+							</div>
+						</div>
+
+						<label class="auth-label" for="signup_password">Password</label>
+						<div class="auth-form-grid2">
+							<input class="auth-input" id="signup_password" type="password" name="password" placeholder="Password" required autocomplete="new-password" />
+							<input class="auth-input" id="signup_password_confirm" type="password" name="password_confirm" placeholder="Confirm password" required autocomplete="new-password" />
+						</div>
+
+						<div class="auth-form-select-row">
+							<div>
+								<label class="auth-label">Major</label>
+								<select class="auth-input">
+									<option>Computer Science</option>
+								</select>
+							</div>
+							<div>
+								<label class="auth-label">Year</label>
+								<select class="auth-input">
+									<option>First year</option>
+								</select>
+							</div>
+						</div>
+
+						<label class="auth-label">Student ID verification</label>
+						<button class="auth-secondary" type="button">Upload</button>
+
+						<div class="auth-terms">
+							<div class="auth-help muted">Accepted formats: JPG, PNG, PDF Max 5MB.</div>
+							<label class="auth-checkbox">
+								<input type="checkbox" checked />
+								<span>I agree to the Terms &amp; Privacy</span>
+							</label>
+						</div>
+
+						<button class="auth-primary" type="submit" id="btn-auth-signup" data-translate-key="auth_create_button">Create account</button>
+						<div class="auth-footer-links">
+							<a href="#" class="auth-link">Terms</a>
+							<a href="#" class="auth-link">Privacy</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
 </body>
 </html>
