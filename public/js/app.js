@@ -3,7 +3,6 @@ import { ApiService } from './ApiService.js';
 import { TranslationService } from './TranslationService.js';
 import { PostRenderer } from './PostRenderer.js';
 import { ProfileRenderer } from './ProfileRenderer.js';
-import { mockUsers, mockContacts, mockFriends } from './data.js';
 
 /**
  * CampusConnect - App Frontend
@@ -15,6 +14,9 @@ class CampusConnectApp {
         this.uiManager = new UIManager();
         this.apiService = new ApiService();
         this.translationService = new TranslationService('fr');
+        this.selectedContactId = null;
+        this.selectedContactMeta = null;
+        this.messagesPollerId = null;
 
         // Références DOM pour les écouteurs d'événements
         this.postsContainer = document.getElementById('posts-container');
@@ -35,14 +37,21 @@ class CampusConnectApp {
         this.initInteractiveButtons();
         this.initChatbot();
 
-        this.uiManager.showAuth(); // Point de départ de l'application
+        // Active l'UI auth uniquement sur la page qui la contient.
+        if (document.getElementById('view-auth')) {
+            this.uiManager.showAuth();
+        }
     }
 
     initNavigation() {
         this.uiManager.navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const targetId = e.currentTarget.getAttribute('data-target');
+                if (!targetId) {
+                    return;
+                }
+
+                e.preventDefault();
                 const linkId = e.currentTarget.id;
                 
                 this.uiManager.activateNavLink(linkId);
@@ -50,7 +59,7 @@ class CampusConnectApp {
 
                 // Si on clique sur le lien du profil, on affiche le profil de l'utilisateur connecté
                 if (targetId === 'view-profile') {
-                    this.renderProfile(mockUsers['Leila Martinez'].name, true);
+                    this.renderProfile('Mon profil', true);
                 }
             });
         });
@@ -113,6 +122,8 @@ class CampusConnectApp {
                     if (list) this.addNewSkillRow(list);
                 }
             });
+
+            this.renderProfile('Mon profil', true);
         }
         this.initProfileTabs();
     }
@@ -248,15 +259,68 @@ class CampusConnectApp {
     }
 
     // Rendu des données Mockées de la Messagerie
-    renderMessages() {
-        const contactsContainer = document.getElementById('contacts-list');
+    resolveMediaUrl(path) {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+            return path;
+        }
+        return `../${path}`;
+    }
+
+    async loadConversation(scrollToBottom = false) {
         const chatHistory = document.getElementById('chat-history');
         const chatHeader = document.getElementById('chat-header');
+        if (!chatHistory || !this.selectedContactId) return;
+
+        const messages = await this.apiService.getMessages(this.selectedContactId);
+        const myId = Number(window.CAMPUSCONNECT_ME?.id_user || 0);
+
+        if (this.selectedContactMeta && chatHeader) {
+            chatHeader.innerHTML = `<h3><img src="${this.selectedContactMeta.avatar}" class="avatar-small" style="vertical-align: middle; margin-right: 10px;"> ${this.selectedContactMeta.name}</h3>`;
+        }
+
+        chatHistory.innerHTML = messages.map((m) => {
+            const cssClass = Number(m.id_sender) === myId ? 'sender' : 'receiver';
+            const mediaHtml = m.fichiers
+                ? `<div style="margin-top:8px;"><img src="${this.resolveMediaUrl(m.fichiers)}" alt="Image message" style="max-width:220px;border-radius:10px;border:1px solid var(--border-color);"></div>`
+                : '';
+            return `<div class="chat-bubble ${cssClass}">${m.contenu || ''}${mediaHtml}</div>`;
+        }).join('') || '<div class="muted small">Aucun message.</div>';
+
+        if (scrollToBottom) {
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    }
+
+    startMessagesPolling() {
+        if (this.messagesPollerId) {
+            clearInterval(this.messagesPollerId);
+        }
+
+        this.messagesPollerId = setInterval(() => {
+            this.loadConversation(false);
+        }, 3000);
+    }
+
+    async renderMessages() {
+        const contactsContainer = document.getElementById('contacts-list');
+        const urlContactId = Number(new URLSearchParams(window.location.search).get('id_contact') || 0);
 
         if (contactsContainer) {
-            mockContacts.forEach(contact => {
+            const contacts = await this.apiService.getContacts();
+
+            if (urlContactId > 0 && !contacts.some(c => Number(c.id) === urlContactId)) {
+                const missingContact = await this.apiService.getUserById(urlContactId);
+                if (missingContact) {
+                    contacts.unshift(missingContact);
+                }
+            }
+
+            contactsContainer.innerHTML = '';
+            contacts.forEach(contact => {
                 const li = document.createElement('li');
                 li.className = 'contact-item';
+                li.dataset.contactId = String(contact.id);
                 li.innerHTML = `
                     <img src="${contact.avatar}" alt="${contact.name}" class="avatar-small">
                     <div class="contact-info">
@@ -264,21 +328,38 @@ class CampusConnectApp {
                         <p>${contact.lastMessage}</p>
                     </div>
                 `;
+                li.addEventListener('click', async () => {
+                    this.selectedContactId = contact.id;
+                    this.selectedContactMeta = contact;
+                    await this.loadConversation(true);
+                    this.startMessagesPolling();
+                });
                 contactsContainer.appendChild(li);
             });
-        }
 
-        if (chatHistory) {
-            chatHeader.innerHTML = `<h3><img src="${mockContacts[0].avatar}" class="avatar-small" style="vertical-align: middle; margin-right: 10px;"> ${mockContacts[0].name}</h3>`;
-            chatHistory.innerHTML = `
-                <div class="chat-bubble receiver">Salut ! Tu es prêt pour le challenge 48h ?</div>
-                <div class="chat-bubble sender">Oui ! J'ai hâte de commencer à coder. 🚀</div>
-            `;
+            if (contacts.length) {
+                const byUrl = urlContactId ? contacts.find(c => Number(c.id) === urlContactId) : null;
+                const first = byUrl
+                    ? contactsContainer.querySelector(`[data-contact-id="${byUrl.id}"]`)
+                    : contactsContainer.firstElementChild;
+                if (first) {
+                    first.click();
+                }
+            } else {
+                const chatHistory = document.getElementById('chat-history');
+                const chatHeader = document.getElementById('chat-header');
+                if (chatHeader) {
+                    chatHeader.textContent = 'Aucune conversation';
+                }
+                if (chatHistory) {
+                    chatHistory.innerHTML = '<div class="muted small">Aucun contact pour le moment.</div>';
+                }
+            }
         }
     }
 
     // Rendu des données Mockées de la section Amis
-    renderFriends() {
+    async renderFriends() {
         const friendsContainer = document.getElementById('friends-list-container');
         const friendsCount = document.getElementById('friends-count');
         const btnInvite = document.getElementById('btn-invite-friend');
@@ -286,31 +367,66 @@ class CampusConnectApp {
 
         if (!friendsContainer || !btnInvite || !inputInvite) return;
 
+        const friends = await this.apiService.getFriends();
+
         const renderList = () => {
             friendsContainer.innerHTML = '';
-            mockFriends.forEach(friend => {
+            friends.forEach(friend => {
                 const friendHTML = `
-                    <li class="friend-item">
+                    <li class="friend-item" data-friend-id="${friend.id || ''}">
                         <img src="${friend.avatar}" alt="${friend.name}" class="avatar-small">
                         <div class="friend-item-info">
                             <h4>${friend.name}</h4>
                             <p class="muted small">${friend.promo}</p>
                         </div>
                         <div class="friend-item-actions">
-                            <button class="btn-outline-sm" style="padding: 8px 12px; font-size: 0.8rem;">Message</button>
-                            <button class="btn-danger-full" style="padding: 8px 12px; font-size: 0.8rem; width: auto; margin-top: 0;">Retirer</button>
+                            <button class="btn-outline-sm btn-friend-message" type="button" style="padding: 8px 12px; font-size: 0.8rem;">Message</button>
+                            <button class="btn-danger-full btn-friend-remove" type="button" style="padding: 8px 12px; font-size: 0.8rem; width: auto; margin-top: 0;">Retirer</button>
                         </div>
                     </li>
                 `;
                 friendsContainer.insertAdjacentHTML('beforeend', friendHTML);
             });
-            if(friendsCount) friendsCount.textContent = mockFriends.length;
+            if(friendsCount) friendsCount.textContent = friends.length;
         };
+
+        friendsContainer.addEventListener('click', (e) => {
+            const messageBtn = e.target.closest('.btn-friend-message');
+            const removeBtn = e.target.closest('.btn-friend-remove');
+            const friendItem = e.target.closest('.friend-item');
+            if (!friendItem) return;
+
+            const friendId = Number(friendItem.dataset.friendId || 0);
+            const friendName = friendItem.querySelector('h4')?.textContent || 'contact';
+
+            if (messageBtn) {
+                if (friendId > 0) {
+                    window.location.href = `messages.php?id_contact=${friendId}`;
+                } else {
+                    alert(`Impossible d'ouvrir la conversation de ${friendName} (id manquant).`);
+                }
+                return;
+            }
+
+            if (removeBtn) {
+                const idx = friends.findIndex((f) => Number(f.id || 0) === friendId && f.name === friendName);
+                if (idx >= 0) {
+                    friends.splice(idx, 1);
+                    renderList();
+                } else {
+                    friendItem.remove();
+                    if (friendsCount) {
+                        const newCount = Math.max(0, Number(friendsCount.textContent || '0') - 1);
+                        friendsCount.textContent = String(newCount);
+                    }
+                }
+            }
+        });
 
         btnInvite.addEventListener('click', () => {
             const name = inputInvite.value.trim();
-            if (name && !mockFriends.some(f => f.name.toLowerCase() === name.toLowerCase())) {
-                mockFriends.push({ name: name, promo: "Invité", avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random` });
+            if (name && !friends.some(f => f.name.toLowerCase() === name.toLowerCase())) {
+                friends.push({ id: 0, name: name, promo: "Invité", avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random` });
                 inputInvite.value = '';
                 renderList();
                 alert(`Invitation envoyée à ${name} !`);
@@ -328,8 +444,23 @@ class CampusConnectApp {
         const composerOverlay = this.uiManager.composerOverlay;
         if (!composerOverlay) return;
 
-        const open = () => this.uiManager.showComposer();
-        const close = () => this.uiManager.hideComposer();
+        const open = () => {
+            // Copier le contenu de la textarea rapide vers le modal
+            const quickTextarea = document.getElementById('quick-post-textarea');
+            const composerTextarea = document.getElementById('composer-textarea');
+            if (quickTextarea && composerTextarea && quickTextarea.value.trim()) {
+                composerTextarea.value = quickTextarea.value;
+            }
+            this.uiManager.showComposer();
+        };
+        
+        const close = () => {
+            document.getElementById('composer-textarea').value = '';
+            document.getElementById('composer-image-input').value = '';
+            document.getElementById('composer-attachments').innerHTML = '';
+            document.getElementById('composer-success').style.display = 'none';
+            this.uiManager.hideComposer();
+        };
 
         const btnNewPost = document.getElementById('btn-newpost');
         if (btnNewPost) {
@@ -346,28 +477,89 @@ class CampusConnectApp {
             btnComposerCancel.addEventListener('click', close);
         }
 
+        // Gestion du bouton image
+        const btnComposerImage = document.getElementById('btn-composer-image');
+        const imageInput = document.getElementById('composer-image-input');
+        if (btnComposerImage && imageInput) {
+            btnComposerImage.addEventListener('click', () => imageInput.click());
+            imageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const preview = document.createElement('img');
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.maxWidth = '200px';
+                    preview.style.marginTop = '10px';
+                    preview.style.borderRadius = '8px';
+                    const attachDiv = document.getElementById('composer-attachments');
+                    attachDiv.innerHTML = '';
+                    attachDiv.appendChild(preview);
+                }
+            });
+        }
+
         const publishBtn = document.querySelector('.composer-publish');
-        const draftBtn = document.querySelector('.draft-btn');
-        const cancelBottomBtn = document.querySelector('.cancel-btn');
-        const successEl = document.querySelector('.composer-success');
+        const draftBtn = document.querySelector('.cancel-btn');
+        const cancelBtn = document.getElementById('btn-composer-cancel');
+        const successEl = document.getElementById('composer-success');
+        const textarea = document.getElementById('composer-textarea');
 
-        const publish = () => {
-            if (successEl) {
-                successEl.textContent = "Success! Your post has been scheduled and will publish at 7:02 AM on 04/08/2026.";
+        const publish = async () => {
+            const contenu = textarea.value.trim();
+            console.log('[COMPOSER] Publish clicked. Contenu:', contenu);
+            
+            if (!contenu) {
+                alert('Veuillez écrire quelque chose !');
+                return;
             }
-            close();
+
+            const imageFile = imageInput.files[0];
+            console.log('[COMPOSER] Image file:', imageFile);
+            
+            try {
+                console.log('[COMPOSER] Appel API createPost...');
+                const result = await this.apiService.createPost(contenu, imageFile);
+                console.log('[COMPOSER] Réponse API:', result);
+                
+                if (result && result.status === 'success') {
+                    successEl.textContent = '✓ Post publié avec succès !';
+                    successEl.style.display = 'block';
+                    successEl.style.color = 'green';
+                    
+                    // Réinitialiser le formulaire rapide aussi
+                    const quickTextarea = document.getElementById('quick-post-textarea');
+                    if (quickTextarea) {
+                        quickTextarea.value = '';
+                    }
+                    
+                    // Recharger le feed après 1 seconde
+                    setTimeout(() => {
+                        close();
+                        this.initFeed();
+                    }, 1000);
+                } else {
+                    const errMsg = result?.message || 'Erreur inconnue';
+                    console.error('[COMPOSER] Erreur API:', errMsg);
+                    successEl.textContent = '✗ Erreur : ' + errMsg;
+                    successEl.style.display = 'block';
+                    successEl.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('[COMPOSER] Erreur lors de la publication :', error);
+                successEl.textContent = '✗ Erreur réseau: ' + error.message;
+                successEl.style.display = 'block';
+                successEl.style.color = 'red';
+            }
         };
 
-        const saveDraft = () => {
-            if (successEl) {
-                successEl.textContent = "Draft saved! AutoSave keeps updating your draft.";
-            }
-            close();
-        };
-
-        if (publishBtn) publishBtn.addEventListener('click', (e) => { e.preventDefault(); publish(); });
-        if (draftBtn) draftBtn.addEventListener('click', (e) => { e.preventDefault(); saveDraft(); });
-        if (cancelBottomBtn) cancelBottomBtn.addEventListener('click', (e) => { e.preventDefault(); close(); });
+        if (publishBtn) publishBtn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            publish(); 
+        });
+        
+        if (draftBtn) draftBtn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            close(); 
+        });
 
         // Close when clicking the dimmed area
         composerOverlay.addEventListener('click', (e) => {
@@ -387,12 +579,6 @@ class CampusConnectApp {
                 e.preventDefault();
                 publish();
                 return;
-            }
-
-            // Ctrl+S (save draft)
-            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
-                e.preventDefault();
-                saveDraft();
             }
         });
     }
@@ -540,14 +726,19 @@ class CampusConnectApp {
     sendMessageFromInput() {
         const chatInput = document.getElementById('chat-input');
         const chatHistory = document.getElementById('chat-history');
+        const imageInput = document.getElementById('chat-image-input');
         const text = chatInput?.value?.trim();
-        if (!text || !chatHistory) return;
-        const bubble = document.createElement('div');
-        bubble.className = 'chat-bubble sender';
-        bubble.textContent = text;
-        chatHistory.appendChild(bubble);
-        chatInput.value = '';
-        chatHistory.scrollTop = chatHistory.scrollHeight;
+        const imageFile = imageInput?.files?.[0] || null;
+
+        if ((!text && !imageFile) || !chatHistory || !this.selectedContactId) return;
+
+        this.apiService.sendMessage(this.selectedContactId, text || '', imageFile).then(() => {
+            if (chatInput) chatInput.value = '';
+            if (imageInput) imageInput.value = '';
+            this.loadConversation(true);
+        }).catch(() => {
+            alert('Impossible d\'envoyer le message pour le moment.');
+        });
     }
 
     initLangSwitcher() {
