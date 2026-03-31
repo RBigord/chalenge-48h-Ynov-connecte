@@ -1,4 +1,7 @@
 vendor/
 node_modules/
 .env
+Backend/.env
+*.env
+!.env.example
 config/local.php

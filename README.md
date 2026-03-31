@@ -1,30 +1,97 @@
 # chalenge-48h-Ynov-connecte
-projet créer dans le cadre du chalenge 48h sur la création d'un réseaux social  inter campus de Ynov pour maitre en relation les élèves 
 
-/nom-de-votre-projet
-│
-├── /config                # Configuration de la base de données
-│   └── Database.php       # Classe de connexion PDO (Encapsulation)
-│
-├── /src                   # Logique métier (Classes PHP)
-│   ├── User.php           # Gestion des profils et compétences (Votre partie)
-│   ├── Auth.php           # Inscription/Connexion et Sessions (Votre partie)
-│   ├── Post.php           # Gestion du fil d'actualité (B1/B2 dédié)
-│   ├── Message.php        # Système de messagerie (B1/B2 dédié)
-│   └── AiManager.php      # Intégration de l'API Gemini/IA (B1/B2 dédié)
-│
-├── /public                # Fichiers accessibles aux navigateurs
-│   ├── /css
-│   │   └── style.css      # Tailwind compilé
-│   ├── /js
-│   │   └── app.js         # Scripts JavaScript (Interactivité)
-│   ├── index.php          # Point d'entrée (Connexion/Accueil)
-│   ├── register.php       # Formulaire d'inscription
-│   ├── profile.php        # Page de profil personnalisable (Votre partie)
-│   └── ymatch.php         # Page dédiée au job board Ymatch (Votre partie)
-│
-├── /assets                # Images, logo original et icônes
-├── /sql                   # Script de création de la BDD et MCD
-├── .gitignore             # Pour exclure le dossier vendor ou config sensible
-├── README.md              # Documentation obligatoire pour le dépôt
-└── tailwind.config.js     # Configuration de Tailwind CSS
+Réseau social inter-campus Ynov réalisé pour un challenge 48h.
+
+## Architecture cible (active)
+
+Le projet utilise une architecture unique :
+
+- Front web server-rendered dans `public/`
+- API MVC dans `Backend/`
+- Configuration DB unifiée dans `config/Database.php`
+
+Les pages `public/*.php` sont connectées a la base via les endpoints `Backend/public/index.php?route=...`.
+
+## Points d'entree
+
+- Application web : `public/index.php`
+- API MVC : `Backend/public/index.php`
+
+## Arborescence reelle (principale)
+
+```text
+config/
+	Database.php                # Config DB unique (PDO)
+
+Backend/
+	public/
+		index.php                 # Front controller API MVC
+	route/
+		api.php                   # Table des routes API
+	controllers/
+		AuthController.php
+		UserController.php
+		PostController.php
+		CommentController.php
+		MessageController.php
+		AIController.php
+	models/
+		Auth.php
+		User.php
+		Post.php
+		Comment.php
+		Message.php
+		Admin.php
+		ia_logic.php
+
+public/
+	index.php                   # Login/Signup
+	feed.php
+	messages.php
+	profile.php
+	friends.php
+	settings.php
+	register.php
+	logout.php
+	css/style.css
+	js/app.js
+	js/ApiService.js
+	partials/header.php
+
+sql/
+	db.sql                      # Schema principal MySQL
+```
+
+## Legacy deprecie
+
+- Dossier `api/` : conserve temporairement pour compatibilite, mais deprecie.
+- Dossier `z/` : deprecie, redirige vers `public/index.php`.
+- Fichier racine `api_assistant.php` : deprecie (HTTP 410), utiliser les routes MVC IA.
+
+## Configuration environnement
+
+Copier `.env.example` vers `.env` (ou `Backend/.env`) puis adapter :
+
+- `DB_HOST`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASS`
+- `YNOV_CHALLENGE_KEY` (optionnel, pour l'IA)
+
+## API principales
+
+- `POST ?route=login`
+- `POST ?route=register`
+- `POST ?route=logout`
+- `GET ?route=profile`
+- `GET ?route=posts`
+- `GET ?route=friends`
+- `GET ?route=contacts`
+- `GET ?route=messages&id_contact=...`
+- `POST ?route=send_message`
+- `POST ?route=create_post`
+- `POST ?route=toggle_like`
+- `GET ?route=comments&id_post=...`
+- `POST ?route=add_comment`
+
+Base URL API locale : `../Backend/public/index.php`
