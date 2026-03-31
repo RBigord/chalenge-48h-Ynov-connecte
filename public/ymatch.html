@@ -1,11 +1,118 @@
-<!-- SECTION YMATCH -->
-<section id="view-ymatch" style="display:none;">
-    <div class="card">
-        <h2>Ymatch Job Board</h2>
-        <p class="muted small">Découvrez des offres de stage et d'alternance exclusives pour les étudiants Ynov.</p>
-        
-        <div style="margin-top: 20px; padding: 40px; text-align: center; border: 1px dashed var(--border-color); border-radius: var(--border-radius);">
-            <p>Le module Ymatch est en cours de construction.</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Ymatch</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Utilisation de FontAwesome pour des icônes rapides et propres -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- VIEW APP (dark) -->
+    <section id="view-app">
+    <!-- HEADER -->
+    <header class="main-header">
+        <div class="header-left">
+            <h1 class="logo"><i class="fa-solid fa-graduation-cap"></i> CampusConnect</h1>
         </div>
+        
+        <div class="header-center">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Rechercher des étudiants, posts...">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn-bot" id="btn-lang-switcher" title="Changer de langue">FR</button>
+            <button class="btn-new-post" id="btn-newpost" title="New Post">
+                <i class="fa-solid fa-circle-plus"></i> New Post
+            </button>
+            <div class="profile-icon">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profil">
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="layout-grid container">
+        
+        <!-- COLONNE GAUCHE : Navigation -->
+        <aside class="sidebar-left">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" id="link-home" class="nav-link"><i class="fa-solid fa-house"></i> <span data-translate-key="nav_home">Home</span></a></li>
+                    <li><a href="messages.html" id="link-messages" class="nav-link"><i class="fa-solid fa-envelope"></i> <span data-translate-key="nav_messages">Messages</span></a></li>
+                    <li><a href="profile.html" id="link-profile" class="nav-link"><i class="fa-solid fa-user"></i> <span data-translate-key="nav_profile">Profile</span></a></li>
+                    <li><a href="friends.html" id="link-friends" class="nav-link"><i class="fa-solid fa-user-group"></i> <span data-translate-key="nav_friends">Amis</span></a></li>
+                    <li><a href="ymatch.html" id="link-ymatch" class="nav-link active"><i class="fa-solid fa-briefcase"></i> <span data-translate-key="nav_ymatch">Ymatch</span></a></li>
+                    <li><a href="settings.html" id="link-settings" class="nav-link"><i class="fa-solid fa-gear"></i> <span data-translate-key="nav_settings">Réglages</span></a></li>
+                    <li><a href="#" class="logout"><i class="fa-solid fa-right-from-bracket"></i> <span data-translate-key="nav_logout">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- COLONNE CENTRE : Contenu principal -->
+        <main class="feed-center">
+            
+            <!-- SECTION YMATCH -->
+            <section id="view-ymatch">
+                <div class="ymatch-container">
+                    <div class="card text-center">
+                        <h2>Ymatch Job Board</h2>
+                        <p class="muted small">La plateforme exclusive pour connecter les talents Ynov avec les entreprises innovantes. Utilisez nos outils IA pour booster votre carrière.</p>
+                    </div>
+            
+                    <!-- Module Résumé d'Actualité -->
+                    <div class="card">
+                        <h3>Résumé d'Actualité par IA</h3>
+                        <p class="muted small" style="margin-bottom: 15px;">Collez le texte d'un article ou d'une offre d'emploi pour en obtenir un résumé instantané.</p>
+                        <textarea id="ia-summary-input" class="ymatch-textarea" placeholder="Collez votre texte ici..."></textarea>
+                        <button id="btn-summarize-ia" class="btn-ia">
+                            <i class="fa-solid fa-robot"></i> Résumer avec l'IA
+                        </button>
+                    </div>
+            
+                    <!-- Module Aide Candidature -->
+                    <div class="card">
+                        <h3>Aide à la Candidature</h3>
+                        <p class="muted small" style="margin-bottom: 15px;">Entrez des compétences clés d'une offre pour recevoir des suggestions de l'IA sur la manière de mettre en valeur votre profil.</p>
+                        <div class="ymatch-input-group">
+                            <input type="text" id="ia-skills-input" class="ymatch-input" placeholder="Compétences (ex: PHP, SQL, React)...">
+                            <button id="btn-suggestions-ia" class="btn-ia">Obtenir des suggestions</button>
+                        </div>
+                    </div>
+            
+                    <!-- Zone de Résultat IA -->
+                    <div class="card" id="ia-result">
+                        <h4>Résultat de l'IA</h4>
+                        <div class="ia-result-content">
+                            <p class="muted">Les résultats de l'intelligence artificielle s'afficheront ici...</p>
+                        </div>
+                    </div>
+            
+                    <!-- Lien Externe -->
+                    <a href="https://ymatch.ynov.com/" target="_blank" class="btn-primary-full">Visiter le site officiel Ymatch <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+
+                </div>
+            </section>
+            
+        </main>
+
+        <!-- COLONNE DROITE : Vide pour cette page, mais peut être remplie -->
+        <aside class="sidebar-right">
+        </aside>
     </div>
-</section>
+
+    <!-- Le Composer et le Chatbot peuvent rester pour être accessibles depuis toutes les pages -->
+    <div id="composer-overlay" class="composer-overlay" aria-hidden="true" style="display:none;"></div>
+    <div id="chatbot-widget" class="chatbot-widget" style="display:none;"></div>
+
+    </section>
+
+    <!-- Utilisation de type="module" pour permettre les imports/exports JavaScript -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
