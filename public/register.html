@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Inscription</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Utilisation de FontAwesome pour des icônes rapides et propres -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- VIEW AUTH (light) - Registration Focus -->
+    <section id="view-auth" class="view-auth" style="display:flex;">
+        <div class="auth-shell">
+            <div class="auth-left">
+                <div class="auth-brand">
+                    <div class="auth-brand-icon"><i class="fa-solid fa-lock"></i></div>
+                    <div>
+                        <div class="auth-brand-title">CampusConnect</div>
+                        <div class="auth-brand-sub">Secure campus community access</div>
+                    </div>
+                </div>
+
+                <h2 data-translate-key="auth_welcome_title">Welcome to your campus hub</h2>
+                <p class="auth-lead" data-translate-key="auth_welcome_subtitle">
+                    Sign in or create an account to join your university network: events, groups, and verified campus resources — all protected with enterprise-grade security.
+                </p>
+
+                <div class="auth-image-grid">
+                    <div class="auth-image-tile">
+                        <img alt="Campus" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" />
+                    </div>
+                    <div class="auth-image-tile">
+                        <img alt="Student" src="https://picsum.photos/seed/campus-student/900/500" />
+                    </div>
+                </div>
+
+                <div class="auth-protected">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <div>
+                        <div class="auth-protected-title">Protected &amp; Verified</div>
+                        <div class="auth-protected-sub">
+                            All accounts require campus-issued email and optional ID verification for groups and events.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-support muted">
+                    Need help? Contact IT Support: it-support@university.edu • (555) 210-1010
+                </div>
+            </div>
+
+            <div class="auth-right">
+                <div class="auth-card">
+                    <button class="btn-lang-auth" id="btn-lang-switcher-auth" title="Changer de langue">
+                        <i class="fa-solid fa-language"></i> FR
+                    </button>
+                    <div class="auth-card-head">
+                        <div>
+                            <div class="auth-card-title" data-translate-key="auth_card_title">Create an account</div>
+                            <div class="auth-card-sub" data-translate-key="auth_card_subtitle">Join CampusConnect to continue</div>
+                        </div>
+                        <div class="auth-secure">
+                            <span class="secure-pill">TLS Encrypted</span>
+                        </div>
+                    </div>
+
+                    <div class="auth-tabs">
+                        <button class="auth-tab" type="button" data-auth-form="login" data-translate-key="auth_tab_login">Login</button>
+                        <button class="auth-tab active" type="button" data-auth-form="signup" data-translate-key="auth_tab_signup">Sign-up</button>
+                    </div>
+
+                    <form id="form-login" class="auth-form" data-auth-form="login" style="display:none;">
+                        <label class="auth-label">Email or Username</label>
+                        <input class="auth-input" type="text" placeholder="Enter your email or username" />
+
+                        <label class="auth-label">Password</label>
+                        <div class="auth-input-with-icon">
+                            <input class="auth-input" type="password" placeholder="Your password" />
+                            <i class="fa-solid fa-eye auth-eye"></i>
+                        </div>
+
+                        <div class="auth-row">
+                            <label class="auth-checkbox">
+                                <input type="checkbox" checked />
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="auth-link">Forgot password?</a>
+                        </div>
+
+                        <button class="auth-primary" type="button" id="btn-auth-login" data-translate-key="auth_signin_button">Sign in</button>
+                        <div class="auth-rec">
+                            <span class="rec-pill">reCAPTCHA protected</span>
+                            <span class="auth-link muted">Campus-only membership required</span>
+                        </div>
+                    </form>
+
+                    <form id="form-signup" class="auth-form" data-auth-form="signup">
+                        <div class="auth-form-grid">
+                            <div>
+                                <label class="auth-label">Full name</label>
+                                <input class="auth-input" type="text" placeholder="Your full name" />
+                            </div>
+                            <div>
+                                <label class="auth-label">Campus email</label>
+                                <input class="auth-input" type="email" placeholder="you@campus.edu" />
+                            </div>
+                        </div>
+
+                        <label class="auth-label">Password</label>
+                        <div class="auth-form-grid2">
+                            <input class="auth-input" type="password" placeholder="Password" />
+                            <input class="auth-input" type="password" placeholder="Confirm password" />
+                        </div>
+
+                        <div class="auth-form-select-row">
+                            <div>
+                                <label class="auth-label">Major</label>
+                                <select class="auth-input">
+                                    <option>Computer Science</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="auth-label">Year</label>
+                                <select class="auth-input">
+                                    <option>First year</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label class="auth-label">Student ID verification</label>
+                        <button class="auth-secondary" type="button">Upload</button>
+
+                        <div class="auth-terms">
+                            <div class="auth-help muted">Accepted formats: JPG, PNG, PDF Max 5MB.</div>
+                            <label class="auth-checkbox">
+                                <input type="checkbox" checked />
+                                <span>I agree to the Terms &amp; Privacy</span>
+                            </label>
+                        </div>
+
+                        <button class="auth-primary" type="button" id="btn-auth-signup" data-translate-key="auth_create_button">Create account</button>
+                        <div class="auth-footer-links">
+                            <a href="#" class="auth-link">Terms</a>
+                            <a href="#" class="auth-link">Privacy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Utilisation de type="module" pour permettre les imports/exports JavaScript -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

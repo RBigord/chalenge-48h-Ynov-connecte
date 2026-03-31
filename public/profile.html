@@ -1,0 +1,66 @@
+<!-- SECTION PROFIL -->
+<section id="view-profile" style="display:none;">
+    <div class="profile-page">
+        <div class="profile-cover">
+            <div class="profile-cover-image" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80');"></div>
+        </div>
+
+        <div class="profile-header-card card">
+            <div class="profile-header-top">
+                <img src="https://ui-avatars.com/api/?name=Leila+Martinez&background=2563eb&color=fff" alt="Profile" class="profile-avatar-large" id="profile-picture">
+
+                <div class="profile-identity">
+                    <h2 id="profile-name">Leila Martinez</h2>
+                    <p class="profile-bio" id="profile-bio">B.S. Computer Science, Class of 2025 · Software Engineering Major</p>
+
+                    <div class="profile-contact">
+                        <div class="contact-item-row">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span class="muted small" id="profile-email">leila.martinez@campus.univ.edu</span>
+                        </div>
+                        <div class="contact-item-row">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span class="muted small" id="profile-location">Oakwood Campus · San Mateo, CA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn-outline-sm" type="button" id="btn-follow-profile" style="display: none;">Follow</button>
+                    <button class="btn-outline-sm" type="button" id="btn-message-profile" style="display: none;">Message</button>
+                    <button class="btn-primary btn-edit-sm" type="button" id="btn-edit-profile" style="display: none;"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="profile-stats-grid">
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-posts">128</span>
+                    <span class="stat-label" data-translate-key="profile_competences">Competences</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-followers">3,842</span>
+                    <span class="stat-label" data-translate-key="profile_followers">Followers</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-following">412</span>
+                    <span class="stat-label" data-translate-key="profile_following">Following</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="stat-groups">9</span>
+                    <span class="stat-label" data-translate-key="profile_groups">Groups</span>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-profile-tab="competences" type="button" data-translate-key="profile_tab_competences">Competences</button>
+                <button class="profile-tab" data-profile-tab="about" type="button" data-translate-key="profile_tab_about">About</button>
+                <button class="profile-tab" data-profile-tab="activities" type="button" data-translate-key="profile_tab_activities">Activities</button>
+                <button class="profile-tab" data-profile-tab="photos" type="button" data-translate-key="profile_tab_photos">Photos &amp; Media</button>
+            </div>
+        </div>
+
+        <div class="profile-feed" id="profile-posts-container">
+            <!-- Posts injectés par le JS -->
+        </div>
+    </div>
+</section>

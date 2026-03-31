@@ -34,8 +34,6 @@ class CampusConnectApp {
         this.initComposer();
         this.initInteractiveButtons();
         this.initChatbot();
-
-        this.uiManager.showAuth(); // Point de départ de l'application
     }
 
     initNavigation() {
@@ -64,11 +62,22 @@ class CampusConnectApp {
     }
 
     initAuth() {
+        const btnAuthLogin = document.getElementById('btn-auth-login');
+        const btnAuthSignup = document.getElementById('btn-auth-signup');
         const logoutLink = document.querySelector('.logout');
+
+        // Sur les pages d'authentification, la connexion redirige vers la page principale.
+        if (btnAuthLogin) btnAuthLogin.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        if (btnAuthSignup) btnAuthSignup.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
 
         if (logoutLink) logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
-            this.uiManager.showAuth();
+            // Redirige vers la page de connexion, car nous sommes maintenant dans une architecture multi-pages.
+            window.location.href = 'auth.html';
         });
         this.initAuthTabs();
     }
